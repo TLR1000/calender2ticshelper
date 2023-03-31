@@ -1,7 +1,25 @@
 # calender2ticshelper
 
 Code that will list relevant calendar entries to help filling out tics.
-Run to the code to find an email in your inbox containing the possible tics entries.
+Run to the code to find an email in your inbox containing the possible tics entries for the current week.
+
+Example contents:
+```
+Maandag 27/03/2023 
+0,5 hours XXX Daily Solution Call 
+0,5 hours Weekly status call YYY projects 
+0,5 hours ZZZ Standup 
+1,0 hours XXX --> Review draft updates for Change 1 
+3,0 hours VVV Proposal writing 
+
+Dinsdag 28/03/2023 
+0,5 hours XXX Daily Solution Call 
+1,5 hours YYY Development Sync-up 
+0,5 hours ZZZ - Start / Alignment Call 
+1,0 hours XXX Industry 4.0 response review & improvement 
+1,0 hours YYY Program Management Committee meeting 
+3,0 hours WWW opportunity 
+```
 
 Function to run: GetEntriesForThisWeek
 
