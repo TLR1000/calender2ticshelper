@@ -1,6 +1,6 @@
 # calender2ticshelper
 
-Code that will list relevant calendar entries to help filling out tics.
+VBA Code that will list relevant calendar entries to help filling out tics.
 Run to the code to find an email in your inbox containing the possible tics entries for the current week.
 
 Example contents of the email:
