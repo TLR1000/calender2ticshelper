@@ -1,0 +1,84 @@
+Function GetApptsForDate(dateValue As Date) As String
+    Dim myStart As Date
+    Dim myEnd As Date
+    Dim oCalendar As Outlook.Folder
+    Dim oItems As Outlook.Items
+    Dim oResItems As Outlook.Items
+    Dim oAppt As Outlook.AppointmentItem
+    Dim strRestriction As String
+    Dim outputStr As String
+     
+    myStart = dateValue
+    myEnd = DateAdd("d", 1, myStart)
+    myEnd = DateAdd("n", -1, DateAdd("d", 1, myStart))
+     
+    Set oCalendar = Application.Session.GetDefaultFolder(olFolderCalendar)
+    Set oItems = oCalendar.Items
+     
+    oItems.IncludeRecurrences = True
+    oItems.Sort "[Start]"
+     
+    'Debug.Print "wordt omgezet hier in " & Format$(myStart, "mm/dd/yyyy hh:mm AMPM") & " en " & Format$(myEnd, "mm/dd/yyyy hh:mm AMPM")
+    strRestriction = "[Start] >= '" & Format$(myStart, "mm/dd/yyyy hh:mm AMPM") _
+    & "' AND [End] <= '" & Format$(myEnd, "mm/dd/yyyy hh:mm AMPM") & "' AND [MeetingStatus] <> 7"
+     
+    'Restrict the Items collection
+    Set oResItems = oItems.Restrict(strRestriction)
+     
+    For Each oAppt In oResItems
+        Dim duration As Double
+        duration = oAppt.duration / 60 ' Convert duration from minutes to hours
+        'outputStr = outputStr & oAppt.Start & " " & oAppt.MeetingStatus & " " & Format(duration, "0.0") & " hours " & oAppt.Subject & vbCrLf
+        outputStr = outputStr & Format(duration, "0.0") & " hours " & oAppt.Subject & vbCrLf
+    Next
+    
+    GetApptsForDate = outputStr 'returning the result
+End Function
+
+
+Function GetEntriesForThisWeek() As String
+    Dim currDate As Date
+    Dim startDate As Date
+    Dim endDate As Date
+    Dim outputStr As String
+    Dim bodyTextStr As String
+    Dim SubjectTextStr As String
+    Dim weekdagen(4)
+    weekdagen(0) = "Maandag"
+    weekdagen(1) = "Dinsdag"
+    weekdagen(2) = "Woensdag"
+    weekdagen(3) = "Donderdag"
+    weekdagen(4) = "Vrijdag"
+
+    currDate = Date
+    startDate = DateAdd("d", 1 - Weekday(currDate, vbMonday), currDate)
+    endDate = DateAdd("d", 5 - Weekday(currDate, vbMonday), currDate)
+     
+    bodyTextStr = "Overzicht deze week: " & vbCrLf
+    SubjectTextStr = "Tics invulhulp"
+    For i = 0 To 4
+        currDate = DateAdd("d", i, startDate)
+        bodyTextStr = bodyTextStr & vbCrLf & weekdagen(i) & " " & currDate & vbCrLf
+        bodyTextStr = bodyTextStr & GetApptsForDate(Format(currDate, "dd/mm/yyyy"))
+    Next
+    
+    Debug.Print bodyTextStr
+    Call SendEmailToMyself(SubjectTextStr, bodyTextStr)
+End Function
+
+Function SendEmailToMyself(strSubject, strBody)
+    Dim objOL, objMail
+    Set objOL = CreateObject("Outlook.Application")
+    
+    ' Create a new mail item
+    Set objMail = objOL.CreateItem(0) ' 0 = olMailItem
+    objMail.To = objOL.Session.CurrentUser.Address
+    objMail.Subject = strSubject
+    objMail.Body = strBody
+
+    ' Send the email and cleanup
+    objMail.Send
+    Set objMail = Nothing
+    Set objOL = Nothing
+    
+End Function
