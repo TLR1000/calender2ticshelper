@@ -3,7 +3,7 @@
 Code that will list relevant calendar entries to help filling out tics.
 Run to the code to find an email in your inbox containing the possible tics entries for the current week.
 
-Example contents:
+Example contents of the email:
 ```
 Maandag 27/03/2023 
 0,5 hours XXX Daily Solution Call 
@@ -19,6 +19,8 @@ Dinsdag 28/03/2023
 1,0 hours XXX Industry 4.0 response review & improvement 
 1,0 hours YYY Program Management Committee meeting 
 3,0 hours WWW opportunity 
+
+...etc
 ```
 
 Function to run: GetEntriesForThisWeek
